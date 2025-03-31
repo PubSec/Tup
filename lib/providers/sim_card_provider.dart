@@ -11,12 +11,14 @@ class SimCardNotifier extends StateNotifier<List<CarrierModel>> {
     if (status.isGranted) {
       try {
         final simCards = await UssdLauncher.getSimCards();
-        final List<CarrierModel> carriers = simCards.map((simCard) {
-          return CarrierModel(
-            carrierName: simCard['carrierName'],
-            subscriptionId: simCard['subscriptionId'],
-          );
-        }).toList();
+        final List<CarrierModel> carriers =
+            simCards.map((simCard) {
+              return CarrierModel(
+                carrierName: simCard['carrierName'],
+                subscriptionId: simCard['subscriptionId'],
+                carrierData: simCard,
+              );
+            }).toList();
         state = carriers; // Update the state with the loaded SIM cards
       } catch (e) {
         print("Error loading SIM cards: $e");
@@ -27,6 +29,8 @@ class SimCardNotifier extends StateNotifier<List<CarrierModel>> {
   }
 }
 
-final simProvider = StateNotifierProvider<SimCardNotifier, List<CarrierModel>>((ref) {
+final simProvider = StateNotifierProvider<SimCardNotifier, List<CarrierModel>>((
+  ref,
+) {
   return SimCardNotifier();
 });

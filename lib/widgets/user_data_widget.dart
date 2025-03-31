@@ -3,6 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:tup/model/carrier_model.dart';
 
-Widget getUserData() {
-  return Column(children: [Text('da')]);
+Widget getUserData(CarrierModel carrierModel) {
+  return Column(
+    children: [
+      Text(carrierModel.carrierName),
+      Text(carrierModel.subscriptionId.toString()),
+    ],
+  );
 }

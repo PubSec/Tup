@@ -7,7 +7,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tup/views/result_view.dart';
 
 class ScanView extends StatefulWidget {
-  const ScanView({super.key});
+  final carrierName;
+  const ScanView({super.key, this.carrierName});
 
   @override
   State<ScanView> createState() => _ScanViewState();
@@ -56,6 +57,7 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.carrierName);
     return FutureBuilder(
       future: _future,
       builder: (context, snapshot) {
