@@ -6,8 +6,6 @@ void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-// TODO: Use riverpod to transfer data across the app
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
