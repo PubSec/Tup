@@ -17,6 +17,7 @@ class SimCardNotifier extends StateNotifier<List<CarrierModel>> {
                 carrierName: simCard['carrierName'],
                 subscriptionId: simCard['subscriptionId'],
                 carrierData: simCard,
+                number: simCard['number'] ?? 'No number',
               );
             }).toList();
         state = carriers; // Update the state with the loaded SIM cards

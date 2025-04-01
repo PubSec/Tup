@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tup/views/home_view.dart';
 
 void main() {
-  runApp(const ProviderScope(child:MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 // TODO: Use riverpod to transfer data across the app

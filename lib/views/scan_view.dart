@@ -7,8 +7,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tup/views/result_view.dart';
 
 class ScanView extends StatefulWidget {
-  final carrierName;
-  const ScanView({super.key, this.carrierName});
+  final int subscritpionId;
+  const ScanView({super.key, required this.subscritpionId});
 
   @override
   State<ScanView> createState() => _ScanViewState();
@@ -57,7 +57,6 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.carrierName);
     return FutureBuilder(
       future: _future,
       builder: (context, snapshot) {
@@ -117,7 +116,10 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
                                     if (isLoading) SizedBox(width: 20),
                                     Text(
                                       "Scan Text",
-                                      style: TextStyle(fontSize: 18),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -217,7 +219,10 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
       await navigator.push(
         MaterialPageRoute(
           builder:
-              (BuildContext context) => ResultView(text: recognizedText.text),
+              (BuildContext context) => ResultView(
+                text: recognizedText.text,
+                subscriptionId: widget.subscritpionId,
+              ),
         ),
       );
       setState(() {

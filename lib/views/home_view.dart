@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -35,11 +34,23 @@ class HomeView extends ConsumerStatefulWidget {
 
 class _HomeViewState extends ConsumerState<HomeView> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(simProvider.notifier).loadSimCards();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final simCardsInfo = ref.watch(simProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text("TUp"),
+        bottom: PreferredSize(
+          preferredSize: Size(10, 10),
+          child: Text(simCardsInfo.firstOrNull?.carrierName ?? 'No carrier'),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -53,8 +64,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
         itemCount: simCardsInfo.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
-            title: Text(simCardsInfo[index].carrierName),
-            subtitle: Text(simCardsInfo[index].subscriptionId.toString()),
+            contentPadding: EdgeInsets.only(left: 20),
+            leading: Icon(Icons.sim_card_rounded),
+            title: Text(
+              "${simCardsInfo[index].carrierName}"
+              " ${simCardsInfo[index].subscriptionId.toString()}",
+            ),
+            subtitle: Text(simCardsInfo[index].number.toString()),
             onLongPress: () {
               showModalBottomSheet(
                 showDragHandle: true,
@@ -63,8 +79,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   return BottomSheet(
                     onClosing: () {},
                     builder: (context) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height / 2,
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height / 10,
                         child: Text(simCardsInfo[index].carrierData.toString()),
                       );
                     },
@@ -77,7 +93,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 MaterialPageRoute(
                   builder:
                       (context) => ScanView(
-                        carrierName: simCardsInfo[index].carrierName,
+                        subscritpionId: simCardsInfo[index].subscriptionId,
                       ),
                 ),
               );
@@ -89,7 +105,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   MaterialPageRoute(
                     builder:
                         (context) => ScanView(
-                          carrierName: simCardsInfo[index].carrierName,
+                          subscritpionId: simCardsInfo[index].subscriptionId,
                         ),
                   ),
                 );

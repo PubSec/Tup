@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ResultView extends StatefulWidget {
+  final int subscriptionId;
   final String text;
 
-  const ResultView({super.key, required this.text});
+  const ResultView({
+    super.key,
+    required this.text,
+    required this.subscriptionId,
+  });
 
   @override
   State<ResultView> createState() => _ResultViewState();
@@ -23,7 +28,7 @@ class _ResultViewState extends State<ResultView> {
       appBar: AppBar(title: const Text('Result'), centerTitle: true),
       body: Container(
         padding: const EdgeInsets.all(30.0),
-        child: Text(value[0], style: TextStyle(fontSize: 20)),
+        child: Text(widget.text, style: TextStyle(fontSize: 20)),
       ),
     );
   }
