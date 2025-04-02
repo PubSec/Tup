@@ -52,7 +52,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   leading: Icon(Icons.sim_card_rounded),
                   title: Text(
                     "${simCardsInfo[index].carrierName}"
-                    " ${snapshot.error.toString() ?? "0"} birr",
+                    " ${snapshot.error.toString()} birr",
                   ),
                   subtitle: Text(simCardsInfo[index].number.toString()),
                   onLongPress: () {

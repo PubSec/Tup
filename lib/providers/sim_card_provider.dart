@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tup/model/carrier_model.dart';
@@ -22,10 +23,10 @@ class SimCardNotifier extends StateNotifier<List<CarrierModel>> {
             }).toList();
         state = carriers; // Update the state with the loaded SIM cards
       } catch (e) {
-        print("Error loading SIM cards: $e");
+        debugPrint("Error loading SIM cards: $e");
       }
     } else {
-      print("Phone permission not granted");
+      debugPrint("Phone permission not granted");
     }
   }
 }

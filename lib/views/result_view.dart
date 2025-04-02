@@ -27,12 +27,12 @@ Future<void> makeMyRequest(String cardPin, int subscriptionId) async {
         subscriptionId: subscriptionId,
       );
 
-      print("Success! Message: $response");
+      debugPrint("Success! Message: $response");
     } catch (e) {
       debugPrint("Error! Code: ${e.toString()}");
     }
   } else {
-    print('Permission lost');
+    debugPrint('Permission lost');
   }
 }
 
@@ -45,13 +45,13 @@ class _ResultViewState extends State<ResultView> {
   @override
   void initState() {
     super.initState();
-    print(widget.text);
+    debugPrint(widget.text);
     makeMyRequest("12345r", widget.subscriptionId);
   }
 
   @override
   Widget build(BuildContext context) {
-    final value = returnList(widget.text);
+    // final value = returnList(widget.text);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Result'), centerTitle: true),

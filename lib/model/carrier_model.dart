@@ -30,13 +30,13 @@ class CarrierModel {
           subscriptionId: subscriptionId,
         );
 
-        print("Success! Message: $response");
+        debugPrint("Success! Message: $response");
         return response;
       } catch (e) {
         debugPrint("Error! Code: ${e.toString()}");
       }
     } else {
-      print('Permission lost');
+      debugPrint('Permission lost');
     }
 
     return Future.value('dasd');

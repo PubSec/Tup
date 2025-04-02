@@ -1,8 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
     <application
         android:label="Tup"
         android:name="${applicationName}"
@@ -34,10 +32,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <service
+       <service
             android:name="com.kavina.ussd_launcher.UssdAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>

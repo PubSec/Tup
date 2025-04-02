@@ -16,6 +16,7 @@ class ScanView extends StatefulWidget {
 
 class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
   bool _isPermissionGranted = false;
+  bool _enableFlashLight = false;
 
   late final Future<void> _future;
   CameraController? _cameraController;
@@ -80,6 +81,27 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
                 title: const Text('SCAN'),
                 automaticallyImplyLeading: false,
                 centerTitle: true,
+                actions: [
+                  IconButton(
+                    icon:
+                        _enableFlashLight
+                            ? Icon(Icons.flash_off)
+                            : Icon(Icons.flash_on),
+                    onPressed: () {
+                      if (_enableFlashLight == false) {
+                        _cameraController?.setFlashMode(FlashMode.torch);
+                        setState(() {
+                          _enableFlashLight = true;
+                        });
+                      } else {
+                        _cameraController?.setFlashMode(FlashMode.off);
+                        setState(() {
+                          _enableFlashLight = false;
+                        });
+                      }
+                    },
+                  ),
+                ],
               ),
               backgroundColor: _isPermissionGranted ? Colors.transparent : null,
               body:
@@ -115,7 +137,7 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
                                       ),
                                     if (isLoading) SizedBox(width: 20),
                                     Text(
-                                      "Scan Text",
+                                      "Scan Pin",
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.white,
@@ -147,6 +169,7 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
     );
   }
 
+  /// Asks permission to access the camera. Uses the PermissionHandler plugin
   Future<void> _requestCameraPermission() async {
     final status = await Permission.camera.request();
     _isPermissionGranted = status == PermissionStatus.granted;
@@ -169,7 +192,7 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
       return;
     }
 
-    // Select the first rear camera.
+    /// Selects the first rear camera.
     CameraDescription? camera;
     for (var i = 0; i < cameras.length; i++) {
       final CameraDescription current = cameras[i];
@@ -192,7 +215,7 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
     );
 
     await _cameraController!.initialize();
-    await _cameraController!.setFlashMode(FlashMode.off);
+    // await _cameraController!.setFlashMode(FlashMode.off);
 
     if (!mounted) {
       return;
@@ -200,6 +223,8 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
     setState(() {});
   }
 
+  /// Handles the scanning and text transfer to ResultView.
+  /// Displays a Snackbar of an error occured.
   Future<void> _scanImage() async {
     setState(() {
       isLoading = true;
@@ -215,6 +240,7 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
 
       final inputImage = InputImage.fromFile(file);
       final recognizedText = await textRecognizer.processImage(inputImage);
+
       file.delete();
       await navigator.push(
         MaterialPageRoute(
@@ -232,9 +258,11 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
       setState(() {
         isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An error occurred when scanning text')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An error occurred when scanning text')),
+        );
+      }
     }
   }
 }
