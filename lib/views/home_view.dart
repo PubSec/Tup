@@ -39,7 +39,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
         itemCount: simCardsInfo.length,
         itemBuilder: (BuildContext context, int index) {
           return FutureBuilder(
-            future: simCardsInfo[index].getAmountOnSim(),
+            future: Future.wait([
+              simCardsInfo[index].getAmountOnSim(),
+              simCardsInfo[index].getSimNumber(),
+            ]),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return ListTile(
@@ -108,11 +111,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   leading: Text("Sim ${(index + 1).toString()}"),
                   title: Text(
                     "${simCardsInfo[index].carrierName}"
-                    " ${snapshot.data ?? "0"} birr",
+                    " ${snapshot.data?.first}",
                   ),
-                  subtitle: Text(
-                    "Phone Number: ${simCardsInfo[index].number.toString()}",
-                  ),
+                  subtitle: Text("Phone Number: ${snapshot.data?.last}"),
                   onLongPress: () {
                     showModalBottomSheet(
                       showDragHandle: true,

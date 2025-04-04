@@ -1,7 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ussd_launcher/ussd_launcher.dart';
+import 'dart:core';
+
+RegExp re = RegExp("[0-9][0-9][0-9]");
 
 class ResultView extends StatefulWidget {
   final int subscriptionId;
@@ -26,6 +28,11 @@ Future<void> makeMyRequest(String cardPin, int subscriptionId) async {
         ussdCode: code,
         subscriptionId: subscriptionId,
       );
+      Iterable<Match> matches = re.allMatches(response!);
+      for (final Match m in matches) {
+        String match = m[0]!;
+        print(match);
+      }
 
       debugPrint("Success! Message: $response");
     } catch (e) {
@@ -54,10 +61,18 @@ class _ResultViewState extends State<ResultView> {
     // final value = returnList(widget.text);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Result'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Result'),
+        centerTitle: true,
+        leading: BackButton(
+          onPressed: () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+        ),
+      ),
       body: Container(
         padding: const EdgeInsets.all(30.0),
-        child: Text(widget.text, style: TextStyle(fontSize: 20)),
+        child: Text(,style: TextStyle(fontSize: 20)),
       ),
     );
   }
