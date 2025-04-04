@@ -3,7 +3,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:ussd_launcher/ussd_launcher.dart';
 import 'dart:core';
 
-RegExp re = RegExp("[0-9][0-9][0-9]");
+RegExp re = RegExp(r"[0-9]");
+RegExp exp = RegExp(r"[0-9]+birr");
 
 class ResultView extends StatefulWidget {
   final int subscriptionId;
@@ -19,22 +20,31 @@ class ResultView extends StatefulWidget {
   State<ResultView> createState() => _ResultViewState();
 }
 
-Future<void> makeMyRequest(String cardPin, int subscriptionId) async {
+Future<void> makeMyRequest(
+  String cardPin,
+  int subscriptionId,
+  String text,
+) async {
   var status = Permission.phone.request();
   if (await status.isGranted) {
     String code = "*804*$cardPin#"; // USSD code payload
     try {
-      final response = await UssdLauncher.sendUssdRequest(
-        ussdCode: code,
-        subscriptionId: subscriptionId,
-      );
-      Iterable<Match> matches = re.allMatches(response!);
-      for (final Match m in matches) {
-        String match = m[0]!;
-        print(match);
+      // final response = await UssdLauncher.sendUssdRequest(
+      //   ussdCode: code,
+      //   subscriptionId: subscriptionId,
+      // );
+      for (final s in text.split('\n')) {
+        final sReplaced = s.replaceAll(' ', '');
+        // Iterable<Match> matches = exp.allMatches(sReplaced);
+        print("+++++++++ {$sReplaced} ++++++++++");
+        if (re.hasMatch(sReplaced)) {
+          print("=====Found match: ${sReplaced}");
+        } else {
+          print("No match");
+        }
       }
 
-      debugPrint("Success! Message: $response");
+      // debugPrint("Success! Message: $response");
     } catch (e) {
       debugPrint("Error! Code: ${e.toString()}");
     }
@@ -53,7 +63,7 @@ class _ResultViewState extends State<ResultView> {
   void initState() {
     super.initState();
     debugPrint(widget.text);
-    makeMyRequest("12345r", widget.subscriptionId);
+    makeMyRequest("12345r", widget.subscriptionId, widget.text);
   }
 
   @override
@@ -72,7 +82,7 @@ class _ResultViewState extends State<ResultView> {
       ),
       body: Container(
         padding: const EdgeInsets.all(30.0),
-        child: Text(,style: TextStyle(fontSize: 20)),
+        child: Text('', style: TextStyle(fontSize: 20)),
       ),
     );
   }
