@@ -36,9 +36,9 @@ Future<void> makeMyRequest(
       for (final s in text.split('\n')) {
         final sReplaced = s.replaceAll(' ', '');
         // Iterable<Match> matches = exp.allMatches(sReplaced);
-        print("+++++++++ {$sReplaced} ++++++++++");
-        if (re.hasMatch(sReplaced)) {
-          print("=====Found match: ${sReplaced}");
+        print("+++++++++ $sReplaced ++++++++++");
+        if (exp.hasMatch(sReplaced)) {
+          print("=====Found match: $sReplaced");
         } else {
           print("No match");
         }

@@ -114,7 +114,12 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 40),
                               child: ElevatedButton(
-                                onPressed: _scanImage,
+                                onPressed: () {
+                                  _scanImage();
+                                  _cameraController!.setFlashMode(
+                                    FlashMode.off,
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
@@ -215,7 +220,7 @@ class _ScanViewState extends State<ScanView> with WidgetsBindingObserver {
     );
 
     await _cameraController!.initialize();
-    // await _cameraController!.setFlashMode(FlashMode.off);
+    await _cameraController!.setFlashMode(FlashMode.off);
 
     if (!mounted) {
       return;
