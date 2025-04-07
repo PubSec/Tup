@@ -20,31 +20,28 @@ class ResultView extends StatefulWidget {
   State<ResultView> createState() => _ResultViewState();
 }
 
-Future<void> makeMyRequest(
-  String cardPin,
-  int subscriptionId,
-  String text,
-) async {
+Future<void> makeMyRequest(int subscriptionId, String text) async {
   var status = Permission.phone.request();
   if (await status.isGranted) {
-    String code = "*804*$cardPin#"; // USSD code payload
     try {
-      // final response = await UssdLauncher.sendUssdRequest(
-      //   ussdCode: code,
-      //   subscriptionId: subscriptionId,
-      // );
       for (final s in text.split('\n')) {
         final sReplaced = s.replaceAll(' ', '');
-        // Iterable<Match> matches = exp.allMatches(sReplaced);
         print("+++++++++ $sReplaced ++++++++++");
-        if (exp.hasMatch(sReplaced)) {
+        if (re.hasMatch(sReplaced)) {
           print("=====Found match: $sReplaced");
+          String cardPin = sReplaced;
+          print(cardPin);
+          String code = "*804*$cardPin#"; // USSD code payload
+          final response = await UssdLauncher.sendUssdRequest(
+            ussdCode: code,
+            subscriptionId: subscriptionId,
+          );
+          debugPrint("Success! Message: $response");
+          break;
         } else {
           print("No match");
         }
       }
-
-      // debugPrint("Success! Message: $response");
     } catch (e) {
       debugPrint("Error! Code: ${e.toString()}");
     }
@@ -54,22 +51,14 @@ Future<void> makeMyRequest(
 }
 
 class _ResultViewState extends State<ResultView> {
-  List<String> returnList(String text) {
-    List<String> textToList = text.split('\n');
-    return textToList;
-  }
-
   @override
   void initState() {
     super.initState();
-    debugPrint(widget.text);
-    makeMyRequest("12345r", widget.subscriptionId, widget.text);
+    makeMyRequest(widget.subscriptionId, widget.text);
   }
 
   @override
   Widget build(BuildContext context) {
-    // final value = returnList(widget.text);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Result'),

@@ -3,7 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:ussd_launcher/ussd_launcher.dart';
 import 'dart:core';
 
-RegExp re = RegExp("[0-9]");
+RegExp re = RegExp(r"[0-9]*");
 
 class CarrierModel {
   String carrierName;
@@ -32,26 +32,21 @@ class CarrierModel {
           ussdCode: code,
           subscriptionId: subscriptionId,
         );
-        debugPrint("Success! Message: $response");
         if (response == null) {
           return "No Amount";
         } else {
-          List<String> listOfResponse = response.split(':');
-          for (String text in listOfResponse) {
-            print("=== ${listOfResponse} ====");
-
-            print("=== ${text[1]} ====");
-            if (re.hasMatch(text)) return text;
-          }
+          String cardAmount =
+              "${re.firstMatch(response.toLowerCase())?[0]} birr";
+          return cardAmount;
         }
       } catch (e) {
         debugPrint("Error! Code: ${e.toString()}");
       }
     } else {
-      debugPrint('Permission lost');
+      debugPrint('Permission denied');
     }
 
-    return Future.value('An error occured.');
+    return 'An error occured.';
   }
 
   Future<String?> getSimNumber() async {
@@ -63,22 +58,19 @@ class CarrierModel {
           ussdCode: code,
           subscriptionId: subscriptionId,
         );
-        debugPrint("Success! Message: $response");
         if (response == null) {
           return "Unable to get number";
         } else {
-          List<String> listOfResponse = response.split(':');
-          for (String text in listOfResponse) {
-            if (re.hasMatch(text)) return text;
-          }
+          String phoneNumber = "${re.firstMatch(response)![0]}";
+          return phoneNumber;
         }
       } catch (e) {
         debugPrint("Error! Code: ${e.toString()}");
       }
     } else {
-      debugPrint('Permission lost');
+      debugPrint('Permission denied');
     }
 
-    return Future.value('An error occured.');
+    return 'An error occured.';
   }
 }
