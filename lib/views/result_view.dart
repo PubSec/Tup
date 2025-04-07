@@ -3,7 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:ussd_launcher/ussd_launcher.dart';
 import 'dart:core';
 
-RegExp re = RegExp(r"[0-9]");
+RegExp re = RegExp(r"^[0-9]*$", multiLine: true, unicode: true);
 RegExp exp = RegExp(r"[0-9]+birr");
 
 class ResultView extends StatefulWidget {
@@ -27,17 +27,17 @@ Future<void> makeMyRequest(int subscriptionId, String text) async {
       for (final s in text.split('\n')) {
         final sReplaced = s.replaceAll(' ', '');
         print("+++++++++ $sReplaced ++++++++++");
-        if (re.hasMatch(sReplaced)) {
+        if (exp.hasMatch(sReplaced.toLowerCase().trim())) {
           print("=====Found match: $sReplaced");
           String cardPin = sReplaced;
           print(cardPin);
-          String code = "*804*$cardPin#"; // USSD code payload
-          final response = await UssdLauncher.sendUssdRequest(
-            ussdCode: code,
-            subscriptionId: subscriptionId,
-          );
-          debugPrint("Success! Message: $response");
-          break;
+          // String code = "*804*$cardPin#"; // USSD code payload
+          // final response = await UssdLauncher.sendUssdRequest(
+          //   ussdCode: code,
+          //   subscriptionId: subscriptionId,
+          // );
+          // debugPrint("Success! Message: $response");
+          // break;
         } else {
           print("No match");
         }
@@ -54,6 +54,7 @@ class _ResultViewState extends State<ResultView> {
   @override
   void initState() {
     super.initState();
+    debugPrint(widget.text);
     makeMyRequest(widget.subscriptionId, widget.text);
   }
 

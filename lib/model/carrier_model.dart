@@ -3,7 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:ussd_launcher/ussd_launcher.dart';
 import 'dart:core';
 
-RegExp re = RegExp(r"[0-9]*");
+RegExp re = RegExp(r"([0-9].[0-9]*)+birr");
 
 class CarrierModel {
   String carrierName;
@@ -35,8 +35,7 @@ class CarrierModel {
         if (response == null) {
           return "No Amount";
         } else {
-          String cardAmount =
-              "${re.firstMatch(response.toLowerCase())?[0]} birr";
+          String cardAmount = "${re.firstMatch(response.toLowerCase())?[0]}";
           return cardAmount;
         }
       } catch (e) {
