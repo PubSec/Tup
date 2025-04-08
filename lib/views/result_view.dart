@@ -24,22 +24,19 @@ Future<void> makeMyRequest(int subscriptionId, String text) async {
   var status = Permission.phone.request();
   if (await status.isGranted) {
     try {
-      for (final s in text.split('\n')) {
-        final sReplaced = s.replaceAll(' ', '');
-        print("+++++++++ $sReplaced ++++++++++");
-        if (exp.hasMatch(sReplaced.toLowerCase().trim())) {
-          print("=====Found match: $sReplaced");
-          String cardPin = sReplaced;
-          print(cardPin);
-          // String code = "*804*$cardPin#"; // USSD code payload
-          // final response = await UssdLauncher.sendUssdRequest(
-          //   ussdCode: code,
-          //   subscriptionId: subscriptionId,
-          // );
-          // debugPrint("Success! Message: $response");
-          // break;
-        } else {
-          print("No match");
+      final sReplaced = text.replaceAll(' ', '');
+      String cardPin = re.firstMatch(sReplaced)?[0] ?? 'noo';
+      String cardAmount = exp.firstMatch(sReplaced)?[0] ?? 'No';
+      if (cardPin.contains(RegExp('[A-Za-z*_#%&!]'))) {
+        print('error');
+      } else {
+        String code = "*805*$cardPin#";
+        final response = await UssdLauncher.sendUssdRequest(
+          ussdCode: code,
+          subscriptionId: subscriptionId,
+        );
+        if (response!.toLowerCase().contains('sorry')) {
+          print('failed');
         }
       }
     } catch (e) {
