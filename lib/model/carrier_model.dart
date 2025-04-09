@@ -6,6 +6,7 @@ import 'dart:core';
 RegExp extractAmountInResponse = RegExp(r"([0-9].[0-9]*)+birr");
 RegExp extractNumberInResponse = RegExp(r"[0-9]*");
 
+// The commented parts might be used to automatically de/serialize the json
 class CarrierModel {
   String carrierName;
   int subscriptionId;
@@ -24,7 +25,9 @@ class CarrierModel {
     required this.number,
   });
 
-  Future<String?> getAmountOnSim() async {
+  // Ask for the card amount on the sim. UssdLauncher is difficult to work so
+  // I'm working on a better ussd service provider.
+  Future<String> getAmountOnSim() async {
     var status = Permission.phone.request();
     if (await status.isGranted) {
       String code = "*804#"; // USSD code payload
@@ -34,10 +37,11 @@ class CarrierModel {
           subscriptionId: subscriptionId,
         );
         if (response == null) {
-          return "No Amount";
+          return "Data unavailable";
         } else {
           String cardAmount =
-              "${extractAmountInResponse.firstMatch(response.toLowerCase())?[0]}";
+              extractAmountInResponse.firstMatch(response.toLowerCase())?[0] ??
+              '';
           return cardAmount;
         }
       } catch (e) {
@@ -50,7 +54,9 @@ class CarrierModel {
     return 'An error occured.';
   }
 
-  Future<String?> getSimNumber() async {
+  /// Provides the sim data how to home view
+  /// Only works sometimes. Issue with the response from ethio tel
+  Future<String> getSimNumber() async {
     var status = Permission.phone.request();
     if (await status.isGranted) {
       String code = "*111#"; // USSD code payload
@@ -59,11 +65,12 @@ class CarrierModel {
           ussdCode: code,
           subscriptionId: subscriptionId,
         );
+
         if (response == null) {
-          return "Unable to get number";
+          return "Data unavailable";
         } else {
           String phoneNumber =
-              "${extractAmountInResponse.firstMatch(response)![0]}";
+              extractAmountInResponse.firstMatch(response)?[0].toString() ?? '';
           return phoneNumber;
         }
       } catch (e) {
