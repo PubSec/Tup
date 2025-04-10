@@ -17,7 +17,7 @@ Future<RechargeResult> makeMyRequest(int subscriptionId, String text) async {
       var cardPinMatch = re.allMatches(sReplaced.toLowerCase());
       for (final cardPin in cardPinMatch) {
         if (cardPin[0].toString().length == 14) {
-          String code = "*805*$cardPin#";
+          String code = "*805*${cardPin[0].toString()}#";
           print("********* ${sReplaced} **********");
           print(cardPin[0].toString());
           print(cardAmount);
@@ -26,11 +26,13 @@ Future<RechargeResult> makeMyRequest(int subscriptionId, String text) async {
             ussdCode: code,
             subscriptionId: subscriptionId,
           );
-          if (response!.toLowerCase().contains('sorry') ||
-              response!.toLowerCase().contains('wrong') ||
-              response!.toLowerCase().contains('failed')) {
+          if (response == null ||
+              response.toLowerCase().contains('sorry') ||
+              response.toLowerCase().contains('wrong') ||
+              response.toLowerCase().contains('failed') ||
+              response.isEmpty) {
             debugPrint(
-              "Recharge unsuccessful: $code -> $cardAmount => $response ",
+              "Recharge unsuccessful: $code -> $cardAmount => $response => $subscriptionId",
             );
             return RechargeResult.failed;
           } else {

@@ -25,7 +25,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("TUp"),
+        title: Text("TUp", style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             onPressed: () {
@@ -39,10 +39,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         itemCount: simCardsInfo.length,
         itemBuilder: (BuildContext context, int index) {
           return FutureBuilder(
-            future: Future.wait([
-              simCardsInfo[index].getAmountOnSim(),
-              simCardsInfo[index].getSimNumber(),
-            ]),
+            future: Future.wait([simCardsInfo[index].getAmountOnSim()]),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return ListTile(
@@ -108,12 +105,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
               } else {
                 return ListTile(
                   contentPadding: EdgeInsets.only(left: 20),
-                  leading: Text("Sim ${(index + 1).toString()}"),
+                  leading: Text("Sim ${simCardsInfo[index].slotIndex + 1}"),
                   title: Text(
                     "${simCardsInfo[index].carrierName}"
                     " ${snapshot.data?.first}",
                   ),
-                  subtitle: Text("Phone Number: ${snapshot.data?.last}"),
+                  subtitle: Text("Phone Number: ${simCardsInfo[index].number}"),
                   onLongPress: () {
                     showModalBottomSheet(
                       showDragHandle: true,

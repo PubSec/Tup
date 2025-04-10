@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Widget customDialog(context, {bool isError = false}) {
-  if (isError == false) {
+  if (isError) {
     return Dialog(
       child: Column(
         children: [

@@ -12,7 +12,7 @@ class CarrierModel {
   int subscriptionId;
   // String displayName;
   String number;
-  // int slotIndex;
+  int slotIndex;
   // String countryIso;
   // int carrierId;
   // bool isEmbedded;
@@ -23,6 +23,7 @@ class CarrierModel {
     required this.subscriptionId,
     required this.carrierData,
     required this.number,
+    required this.slotIndex,
   });
 
   // Ask for the card amount on the sim. UssdLauncher is difficult to work so
@@ -46,35 +47,7 @@ class CarrierModel {
         }
       } catch (e) {
         debugPrint("Error! Code: ${e.toString()}");
-      }
-    } else {
-      debugPrint('Permission denied');
-    }
-
-    return 'An error occured.';
-  }
-
-  /// Provides the sim data how to home view
-  /// Only works sometimes. Issue with the response from ethio tel
-  Future<String> getSimNumber() async {
-    var status = Permission.phone.request();
-    if (await status.isGranted) {
-      String code = "*111#"; // USSD code payload
-      try {
-        final response = await UssdLauncher.sendUssdRequest(
-          ussdCode: code,
-          subscriptionId: subscriptionId,
-        );
-
-        if (response == null) {
-          return "Data unavailable";
-        } else {
-          String phoneNumber =
-              extractAmountInResponse.firstMatch(response)?[0].toString() ?? '';
-          return phoneNumber;
-        }
-      } catch (e) {
-        debugPrint("Error! Code: ${e.toString()}");
+        return e.toString();
       }
     } else {
       debugPrint('Permission denied');
